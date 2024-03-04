@@ -1,15 +1,10 @@
 {
   "index": "Introduction",
   "info_gathering": "Information Gathering",
-  "advanced": "Advanced (A Folder)",
-  "about": {
-    "title": "About",
-    "type": "page"
-  },
-  "contact": {
-    "title": "Contact ↗",
+  "signin": {
+    "title": "Sign in ↗",
     "type": "page",
-    "href": "https://twitter.com/",
+    "href": "https://google.com/",
     "newWindow": true
   }
 }
