@@ -1,0 +1,43 @@
+# Collecting IIS Traces for On-Premise
+
+This guide provides step-by-step instructions for collecting traces from an on-premise deployment of Dynamics 365 Customer Engagement (CE) to troubleshoot issues related to the D365 CE SDK.
+
+## Prerequisites:
+
+- Administrative access to the D365 CE server.
+- Microsoft Internet Information Services (IIS) Manager installed on your machine.
+
+## Steps:
+
+### Enable Diagnostic Logging:
+
+Open IIS Manager.
+Expand the server node and navigate to Sites > [Your D365 CE Website].
+In the Features View, double-click Trace Logging.
+In the Actions pane, click Start Tracing.
+Select the Trace provider as Microsoft Dynamics 365 and Trace level as Verbose.
+Click OK to save the changes.
+
+### Reproduce the Issue:
+
+Perform the actions that consistently trigger the SDK issue you are experiencing.
+
+### Collect the Trace File:
+
+Open IIS Manager again.
+Navigate to the same website as in step 1.
+In the Features View, double-click Trace Logging.
+In the Actions pane, click Stop Tracing.
+Click View All Traces....
+Locate the trace file named similar to D365-<Date>-<Time>.etl and download it.
+Package and Share the Trace File:
+
+Compress the downloaded trace file using a tool like ZIP or RAR.
+Important: Due to the potentially large size of the trace file, avoid attaching it directly to emails.
+Instead, upload the compressed file to a cloud storage service like OneDrive or SharePoint and share the access link with the support team.
+Additional Notes:
+
+Collecting traces can impact system performance. Stop tracing as soon as you have reproduced the issue and collected the necessary data.
+If the trace file size is exceptionally large, consider collecting only a specific timeframe around the issue occurrence using the Start Time and End Time options in the Trace Logging window.
+Sharing sensitive information within the trace file is highly discouraged. Ensure you are comfortable sharing the collected data before proceeding.
+By following these steps, you can effectively capture valuable diagnostic information to assist the D365 CE SDK support team in resolving your issue efficiently.

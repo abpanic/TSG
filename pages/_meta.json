@@ -1,6 +1,7 @@
 {
   "index": "Introduction",
   "info_gathering": "Information_Gathering",
+  "Tracing":"Tracing",
   "signin": {
     "title": "Sign in ↗",
     "type": "page",
