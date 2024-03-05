@@ -1,11 +1,12 @@
 {
   "index": "Introduction",
-  "info_gathering": "Information_Gathering",
+  "info_gathering": "Information Collection",
   "Tracing":"Tracing",
-  "signin": {
-    "title": "Sign in ↗",
-    "type": "page",
-    "href": "https://google.com/",
-    "newWindow": true
-  }
+  "todo":"To Do"
+//  "signin": {
+//  "title": "Sign in ↗",
+//    "type": "page",
+//    "href": "https://google.com/",
+//    "newWindow": true
+//  }
 }

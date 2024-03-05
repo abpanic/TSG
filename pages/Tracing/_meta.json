@@ -1,5 +1,11 @@
 {
-  "onpremisetrace": "On Premise Tracing",
+  "onpremisetrace": "On-Premise Tracing",
   "Plugintrace": "Plugin Tracing",
-  "Customtracing": "Tracing in Custom App"
+  "Customtracing": "Logging in Custom App",
+"Eventviewer":"Event Viewer Logs",
+"Fiddler":"Capture Fiddler" ,
+"PSR":"Capture PSR",
+"F12Trace":"capture Browser trace",
+"Customizationxml":"Finding your customization.xml",
+"BareGrep":"Using BareGrep"
 }
