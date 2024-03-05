@@ -11,7 +11,7 @@ Several excellent logging frameworks are available for C# applications:
 
 ## Microsoft's Built-in Logging
 
-C# also provides its own built-in logging capabilities using the Microsoft.Extensions.Logging namespace. This is a good option for simpler applications, or if you want to minimize external dependencies.
+C# also provides its own built-in logging capabilities using the `Microsoft.Extensions.Logging` namespace. This is a good option for simpler applications, or if you want to minimize external dependencies.
 
 ## How to Include Logging
 
@@ -25,7 +25,7 @@ Install-Package NLog -Version <latest_version>
 ```
 
 **2. Configuration:**
-Create an NLog configuration file (typically named NLog.config) in your project's root directory:
+Create an NLog configuration file (typically named `NLog.config`) in your project's root directory:
 
 ```XML
 <?xml version="1.0" encoding="utf-8" ?>
@@ -42,7 +42,7 @@ Create an NLog configuration file (typically named NLog.config) in your project'
 </nlog>
 ```
 
-This configuration defines a file target to write logs to applog.txt and instructs NLog to capture logs with the 'Debug' level and higher.
+This configuration defines a file target to write logs to `applog.txt` and instructs NLog to capture logs with the 'Debug' level and higher.
 
 **3. Usage:**
 In your C# code, obtain an ILogger instance and use it to log messages:
@@ -84,9 +84,9 @@ class MyClass
 
 Create a new C# console or Windows application.
 Install the following NuGet packages:
-NLog
-Microsoft.CrmSdk.CoreAssemblies (for Dynamics 365 CE interactions)
-**2. NLog Configuration** (NLog.config)
+* `NLog`
+* `Microsoft.CrmSdk.CoreAssemblies` (for Dynamics 365 CE interactions)
+**2. NLog Configuration** (`NLog.config`)
 
 ```XML
 <?xml version="1.0" encoding="utf-8" ?>
@@ -151,15 +151,15 @@ namespace D365CE_WhoAmI
 
 **Explanation**
 
-- **NLog Configuration:** The provided NLog.config logs all levels (Trace and above) to the file d365app.log.
+- **NLog Configuration:** The provided `NLog.config` logs all levels (Trace and above) to the file `d365app.log`.
 - **Logging in Code:**
-- We get an ILogger instance for our class.
-- Logging is used within the ConnectToCrm function to log connection attempts.
+- We get an `ILogger` instance for our class.
+- Logging is used within the `ConnectToCrm` function to log connection attempts.
 - Success or failure of the WhoAmI call is logged.
 - Exceptions are caught and logged with detailed error messages.
 **Important:**
 
-Replace "Your D365 CE Connection String" with your actual Dynamics 365 CE connection string.
+Replace `"Your D365 CE Connection String"` with your actual Dynamics 365 CE connection string.
 Ensure the NLog.config file is copied to the output directory of your application.
 **Benefits of Logging**
 

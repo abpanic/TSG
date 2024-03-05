@@ -1,8 +1,43 @@
-# On-Premise Tracing
+## Understanding and Obtaining Microsoft Dynamics CRM Traces
 
-Traces can be collected in D365 in one of 2 ways:
-1. Registry
+Microsoft Dynamics CRM traces are powerful debugging tools that provide detailed logs of system activities and events. This guide explains two methods for enabling and managing tracing for both new and experienced users.
 
-2. Powershell script
+**Prerequisites**
 
+* Basic familiarity with your operating system (Windows).
+* Understanding of Dynamics CRM concepts.
+* Administrator privileges may be needed for certain actions.
 
+**❗️Caution:** Changes to the registry can have unintended consequences. Create a backup before proceeding.
+
+### Method 1: Using the Registry
+
+* **Step 1:** Open the Registry Editor (Press Windows key + R, type 'regedit', and press Enter).
+* **Step 2:** Navigate to the appropriate CRM registry key:
+     * **CRM Server:** `HKEY_LOCAL_MACHINE -> SOFTWARE -> Microsoft -> MSCRM`
+     * **CRM for Outlook:** `HKEY_CURRENT_USER -> SOFTWARE -> Microsoft -> MSCRMClient`
+* **Step 3:** Create the following DWORD (32-bit) values:
+    * `TraceEnabled`: Set to `1` to enable tracing.
+    * `TraceDirectory`: Set to your desired log location (e.g., `C:\CRMLogs`).
+    * `TraceRefresh`: Set to `99` (or any value) for changes to the above values to take effect.
+* **Step 4:**  Restart any Dynamics CRM services or components for changes to be applied. 
+
+### Method 2: Using Deployment Properties (On-Premises)
+
+* **Step 1:** Locate the Deployment Manager (`Microsoft.Crm.Deployment.exe`) in your Dynamics 365 Customer Engagement (on-premises) installation directory (`Server\bin`).
+* **Step 2:** Right-click on `Microsoft.Crm.Deployment.exe` and select "Properties".
+* **Step 3:** In the "Tracing" tab:
+    * Check "Enable Deployment-Level Tracing".
+    * Specify the "Log File Location".
+    * Set the "Exception Trace Level".
+* **Step 4:** Click "Apply" and "OK".
+
+### Retrieving Trace Logs
+
+* Trace logs will be generated in the location you specified in either method. 
+* Use a text editor or log analysis tool to review them.
+
+**Important Considerations**
+
+* **Performance:** Enabling tracing can impact performance. Disable it when not needed.
+* **Data Sensitivity:** Logs may contain sensitive information. Exercise caution with their storage and usage.  
