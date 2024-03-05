@@ -1,7 +1,7 @@
 {
-  "name": "nextra-docs-template",
+  "name": "tsg-docs",
   "version": "0.0.1",
-  "description": "Nextra docs template",
+  "description": "Troublshooting Guide",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -11,12 +11,9 @@
     "type": "git",
     "url": "git+https://github.com/shuding/nextra-docs-template.git"
   },
-  "author": "Shu Ding <g@shud.in>",
+  "author": "Abhilash Panicker <abhilash.panicker@outlook.com>",
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/shuding/nextra-docs-template/issues"
-  },
-  "homepage": "https://github.com/shuding/nextra-docs-template#readme",
+  "homepage": "https://customization-tsg.vercel.app/",
   "dependencies": {
     "next": "^13.5.6",
     "nextra": "latest",
