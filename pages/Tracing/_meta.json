@@ -2,7 +2,7 @@
   "onpremisetrace": "On-Premise Tracing",
   "Plugintrace": "Plugin Tracing",
   "Customtracing": "Logging in Custom App",
-"Eventviewer":"Event Viewer Logs",
+"EventViewer":"Event Viewer Logs",
 "Fiddler":"Capture Fiddler" ,
 "PSR":"Capture PSR",
 "F12Trace":"capture Browser trace",
