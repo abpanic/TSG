@@ -6,7 +6,7 @@ const config: DocsThemeConfig = {
   project: {
     link: 'https://github.com/abpanic',
   },
-  docsRepositoryBase: 'https://github.com/shuding/nextra-docs-template',
+  docsRepositoryBase: 'https://github.com/abpanic/TSG',
   footer: {
     text: 'D365 CE Customization Troublshooting Guide',
   },
