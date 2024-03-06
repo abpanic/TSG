@@ -15,7 +15,7 @@ Microsoft Dynamics CRM traces are powerful debugging tools that provide detailed
 * **Step 1:** Open the Registry Editor (Press Windows key + R, type 'regedit', and press Enter).
 * **Step 2:** Navigate to the appropriate CRM registry key:
      * **CRM Server:** `HKEY_LOCAL_MACHINE -> SOFTWARE -> Microsoft -> MSCRM`
-     * **CRM for Outlook:** `HKEY_CURRENT_USER -> SOFTWARE -> Microsoft -> MSCRMClient`
+
 * **Step 3:** Create the following DWORD (32-bit) values:
     * `TraceEnabled`: Set to `1` to enable tracing.
     * `TraceDirectory`: Set to your desired log location (e.g., `C:\CRMLogs`).
