@@ -1,6 +1,6 @@
-## Understanding and Obtaining Microsoft Dynamics CRM Traces
+## Collecting Microsoft Dynamics CRM Traces for On-Premise instances
 
-Microsoft Dynamics CRM traces are powerful debugging tools that provide detailed logs of system activities and events. This guide explains two methods for enabling and managing tracing for both new and experienced users.
+Microsoft Dynamics CRM traces are powerful debugging tools that provide detailed logs of system activities and events. This guide explains three methods for enabling and managing tracing.
 
 **Prerequisites**
 
@@ -13,18 +13,24 @@ Microsoft Dynamics CRM traces are powerful debugging tools that provide detailed
 ### Method 1: Using the Registry
 
 * **Step 1:** Open the Registry Editor (Press Windows key + R, type 'regedit', and press Enter).
+![Registry image](./media/onpremise/regedit.png)
+
+Know about the registry components here ![registry components](./media/onpremise/registry1.png)
 * **Step 2:** Navigate to the appropriate CRM registry key:
      * **CRM Server:** `HKEY_LOCAL_MACHINE -> SOFTWARE -> Microsoft -> MSCRM`
+     ![Navigating to MSCRM key](./media/onpremise/MSCRMkey.gif)
+     
 
 * **Step 3:** Create the following DWORD (32-bit) values:
     * `TraceEnabled`: Set to `1` to enable tracing.
     * `TraceDirectory`: Set to your desired log location (e.g., `C:\CRMLogs`).
     * `TraceRefresh`: Set to `99` (or any value) for changes to the above values to take effect.
+    ![Location of the new values](./media/onpremise/crm-registry.png)
 * **Step 4:**  Restart any Dynamics CRM services or components for changes to be applied. 
 
-### Method 2: Using Deployment Properties (On-Premises)
+### Method 2: Using Deployment Properties 
 
-* **Step 1:** Locate the Deployment Manager (`Microsoft.Crm.Deployment.exe`) in your Dynamics 365 Customer Engagement (on-premises) installation directory (`Server\bin`).
+* **Step 1:** Locate the Deployment Manager (`Microsoft.Crm.Deployment.exe`) in your Dynamics 365 Customer Engagement installation directory (`Server\bin`).
 * **Step 2:** Right-click on `Microsoft.Crm.Deployment.exe` and select "Properties".
 * **Step 3:** In the "Tracing" tab:
     * Check "Enable Deployment-Level Tracing".
@@ -32,6 +38,106 @@ Microsoft Dynamics CRM traces are powerful debugging tools that provide detailed
     * Set the "Exception Trace Level".
 * **Step 4:** Click "Apply" and "OK".
 
+### Method 3: Using Powershell
+
+When to Choose Which
+
+**Basic Tracing Enablement:** If your primary need is to simply enable or disable Dynamics CRM tracing and set the log directory, the article's approach using the CRM PowerShell cmdlets would be the most straightforward.
+
+**Advanced Configuration:** If you require more advanced configuration options like enabling the call stack or more granular control over logging levels, the script involving direct web.config modification would be more suitable.
+
+ Here's a PowerShell script that incorporates the valuable insights for configuring D365 logging, along with the functionality to control file location and logging levels.
+
+Script:
+
+```PowerShell
+Param(
+    [Parameter(Mandatory)]
+    [string]$TraceFilePath = "C:\D365Logs",  # Default location
+
+    [Parameter(Mandatory)]
+    [ValidateSet("Verbose", "Information", "Warning", "Error", "Critical")]  
+    [string]$LogLevel = "Verbose"
+)
+
+# Ensure trace file directory exists
+if (!(Test-Path $TraceFilePath)) {
+    New-Item -ItemType Directory -Path $TraceFilePath | Out-Null
+}
+
+# Construct the XML configuration section
+$xmlConfig = @"
+<system.diagnostics>
+  <sources>
+    <source name="Microsoft.Dynamics" switchValue="$LogLevel">
+      <listeners>
+        <add name="D365TraceListener" />
+      </listeners>
+    </source>
+  </sources>
+  <sharedListeners>
+    <add name="D365TraceListener" 
+         type="System.Diagnostics.TextWriterTraceListener" 
+         initializeData="$TraceFilePath\D365Trace.log" 
+         traceOutputOptions="ProcessId, DateTime, Callstack"/>
+  </sharedListeners>
+  <trace autoflush="true" />
+</system.diagnostics>
+"@
+
+# Modify the web.config file of your D365 instance
+# *** CAUTION:  Back up your existing web.config before proceeding ***
+
+$webConfigPath = "C:\Path\To\Your\D365\web.config"  # Replace with the correct path
+$xmlDoc = New-Object System.Xml.XmlDocument
+$xmlDoc.Load($webConfigPath)
+
+# Add/update the <system.diagnostics> section (if not already present)
+$configSection = $xmlDoc.SelectSingleNode("configuration/system.diagnostics")
+if (!$configSection) {
+    $configSection = $xmlDoc.CreateElement("system.diagnostics")
+    $xmlDoc.configuration.AppendChild($configSection)
+}
+$configSection.InnerXml = $xmlConfig
+
+# Save the modified web.config
+$xmlDoc.Save($webConfigPath)
+
+Write-Host "D365 logging configuration updated. Log files will be written to: $TraceFilePath"
+```
+Explanation:
+
+Parameters:
+
+TraceFilePath: Allows you to specify the desired location for the log files. Defaults to "C:\D365Logs".
+LogLevel: Controls the verbosity of logging. Valid options are:
+"Verbose"
+"Information"
+"Warning"
+"Error"
+"Critical"
+Directory Creation: Checks if the specified trace directory exists, creates it if necessary.
+
+XML Configuration: Constructs the XML snippet needed to configure D365's logging. This includes settings for:
+
+Log level
+Log file path
+Enabling call stack tracing
+Web.config Modification:
+
+Important: Before running this, make sure you have a backup of your D365's web.config file.
+Loads the web.config file.
+Adds or updates the `<system.diagnostics>` section with the constructed XML configuration.
+Saves the changes to web.config.
+How to Use:
+
+Save as a .ps1 file (example: enable_d365_logging.ps1)
+Open a PowerShell console (run as administrator).
+Run the script:
+```PowerShell
+.\enable_d365_logging.ps1 -TraceFilePath "D:\MyLogs" -LogLevel "Information" 
+```
+Remember: You'll likely need to restart your D365 services for the logging changes to take effect.
 ### Retrieving Trace Logs
 
 * Trace logs will be generated in the location you specified in either method. 
