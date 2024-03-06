@@ -44,11 +44,13 @@ When to Choose Which
 
 **Basic Tracing Enablement:** If your primary need is to simply enable or disable Dynamics CRM tracing and set the log directory, the article's approach using the CRM PowerShell cmdlets would be the most straightforward.
 
-**Advanced Configuration:** If you require more advanced configuration options like enabling the call stack or more granular control over logging levels, the script involving direct web.config modification would be more suitable.
+**Advanced Configuration:** If you require more advanced configuration options like enabling the call stack or more granular control over logging levels, the script involving direct `web.config` modification would be more suitable.
 
- Here's a PowerShell script that incorporates the valuable insights for configuring D365 logging, along with the functionality to control file location and logging levels.
+For Advanced Configuration, to capture CRM traces along with stack trace is as follows:
 
-Script:
+**💥 Back-up `web.config` file before proceeding** 
+
+The script to be executed in powershell is:
 
 ```PowerShell
 Param(
