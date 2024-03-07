@@ -1,6 +1,7 @@
 ## Dynamics CRM Traces for On-Premise instances
 
-Microsoft Dynamics CRM traces are powerful debugging tools that provide detailed logs of system activities and events. This guide explains three methods for enabling and managing tracing.
+Dynamics CRM traces are powerful debugging tools that provide detailed logs of system activities and events. 
+This guide explains three methods for enabling and managing tracing.
 
 **Prerequisites**
 
@@ -46,6 +47,8 @@ Know about the registry components here ![registry components](./media/onpremise
 - **For Advanced Configuration**: Detailed scripts allow for intricate settings like call stack activation and nuanced logging levels.
 
 ### PowerShell Scripts for  Basic Tracing
+
+**❗️Caution: The following script will write logs to "D:\crmtrace\logs\" Either create a folder at such location or update the location in script**
 
 **Enabling CRM Tracing**:
 
@@ -195,59 +198,3 @@ Remember: You'll likely need to restart your D365 services for the logging chang
 * **Performance:** Enabling tracing can impact performance. Disable it when not needed.
 * **Data Sensitivity:** Logs may contain sensitive information. Exercise caution with their storage and usage.  
 
-A simple powershell script to capture traces :
-
-How To Enable CRM Tracing:
-
-```Powershell
-
-#https://support.microsoft.com/en-au/help/907490/how-to-enable-tracing-in-microsoft-dynamics-crm
-#feedback to: github.com/abpanic
- 
-Add-PSSnapin Microsoft.Crm.PowerShell
- 
-$setting = Get-CrmSetting TraceSettings
-$setting.Enabled = $True
-$setting.Directory = "D:\crmtrace\logs\"
- 
-Set-CrmSetting $setting
-Get-CrmSetting TraceSettings
- 
-Write-Output "The Crm Tracing is now ENABLED and the tracing logs will be available on this directory $($setting.Directory)"
-pause
-```
-
-How To Disable CRM Tracing:
-
-```PowerShell
-#https://support.microsoft.com/en-au/help/907490/how-to-enable-tracing-in-microsoft-dynamics-crm
-#feedback to: github.com/abpanic
-
-Add-PSSnapin Microsoft.Crm.PowerShell
- 
-$setting = Get-CrmSetting TraceSettings
-$setting.Enabled = $False
- 
-Set-CrmSetting $setting
-Get-CrmSetting TraceSettings
- 
-Write-OutPut "The Crm Tracing is now DISABLED"
-pause
-```
-
-Restart CRM Services:
-
-```Powershell
-get-service *mscrm* | restart-service
-```
-
-
-
-## Enabling Microsoft Dynamics CRM Traces for On-Premise Instances
-
-
-
-
-
-
-By following these methods, you can enable tracing in Microsoft Dynamics CRM on-premise instances, aiding in system analysis and debugging.
