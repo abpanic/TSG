@@ -26,7 +26,7 @@ Know about the registry components here ![registry components](./media/onpremise
     * `TraceDirectory`: Set to your desired log location (e.g., `C:\CRMLogs`).
     * `TraceRefresh`: Set to `99` (or any value) for changes to the above values to take effect.
     ![Location of the new values](./media/onpremise/crm-registry.png)
-* **Step 4:**  Restart any Dynamics CRM services or components for changes to be applied. 
+* **Step 4:**  **Restart Services**: Reboot Dynamics CRM services or components to implement changes.
 
 ### Method 2: Using Deployment Properties 
 
@@ -38,15 +38,60 @@ Know about the registry components here ![registry components](./media/onpremise
     * Set the "Exception Trace Level".
 * **Step 4:** Click "Apply" and "OK".
 
-### Method 3: Using Powershell
+### **Method 3: PowerShell Scripts**
 
-When to Choose Which
+**Choosing the Right Method**:
 
-**Basic Tracing Enablement:** If your primary need is to simply enable or disable Dynamics CRM tracing and set the log directory, the article's approach using the CRM PowerShell cmdlets would be the most straightforward.
+- **For Basic Tracing**: Utilize CRM PowerShell cmdlets to swiftly enable/disable tracing and designate a log directory.
+- **For Advanced Configuration**: Detailed scripts allow for intricate settings like call stack activation and nuanced logging levels.
 
-**Advanced Configuration:** If you require more advanced configuration options like enabling the call stack or more granular control over logging levels, the script involving direct `web.config` modification would be more suitable.
+### PowerShell Scripts for  Basic Tracing
 
-For Advanced Configuration, to capture CRM traces along with stack trace is as follows:
+**Enabling CRM Tracing**:
+
+```Powershell
+Add-PSSnapin Microsoft.Crm.PowerShell
+ 
+$setting = Get-CrmSetting TraceSettings
+$setting.Enabled = $True
+$setting.Directory = "D:\crmtrace\logs\"
+ 
+Set-CrmSetting $setting
+Get-CrmSetting TraceSettings
+ 
+Write-Output "CRM Tracing ENABLED. Logs at: $($setting.Directory)"
+```
+
+**Disabling CRM Tracing**:
+
+```Powershell
+Add-PSSnapin Microsoft.Crm.PowerShell
+ 
+$setting = Get-CrmSetting TraceSettings
+$setting.Enabled = $False
+ 
+Set-CrmSetting $setting
+Get-CrmSetting TraceSettings
+ 
+Write-OutPut "CRM Tracing DISABLED."
+```
+
+**Restarting CRM Services**:
+
+```Powershell
+get-service *mscrm* | restart-service
+```
+
+### **Accessing Trace Logs**
+
+Logs will be available at the specified location. Review them with a text editor or log analysis tool.
+
+### **Key Considerations**
+
+- **Performance Impact**: Use tracing judiciously as it can affect system performance.
+- **Data Sensitivity**: Handle logs carefully as they might contain sensitive data.
+
+### PowerShell Scripts For Advanced Configuration in tracing, to capture CRM traces along with stack trace is as follows:
 
 **💥 Back-up `web.config` file before proceeding** 
 
@@ -195,3 +240,14 @@ Restart CRM Services:
 ```Powershell
 get-service *mscrm* | restart-service
 ```
+
+
+
+## Enabling Microsoft Dynamics CRM Traces for On-Premise Instances
+
+
+
+
+
+
+By following these methods, you can enable tracing in Microsoft Dynamics CRM on-premise instances, aiding in system analysis and debugging.
