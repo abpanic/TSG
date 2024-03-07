@@ -1,170 +1,78 @@
-# How to include logging in your Custom App.
-Example below is in C# but the same logic applies in other programming languages
+# Integrating Logging into Custom Applications for Dynamics 365 CE
 
-## Popular Logging Frameworks
+Implementing effective logging mechanisms is pivotal for monitoring application health, facilitating debugging, and ensuring operational transparency. This guide outlines a strategy to incorporate logging into custom applications that interact with Dynamics 365 Customer Engagement (D365 CE), focusing on the use of `ILogger`, a part of the `Microsoft.Extensions.Logging` namespace.
 
-Several excellent logging frameworks are available for C# applications:
+## Choosing a Logging Approach
 
-- **NLog**: A flexible and mature logging library with support for various targets (files, databases, consoles, etc.) and advanced features like structured logging. https://nlog-project.org/
-- **Serilog**: Designed with structured logging at its core. Events are enriched with properties for powerful filtering and searching within your logs. https://serilog.net/
-- **log4net**: A well-established port of the popular Apache log4j framework, offering various configuration options and log appenders. https://logging.apache.org/log4net/
+While various third-party logging frameworks like Serilog and log4net offer rich features, this guide emphasizes the use of `Microsoft.Extensions.Logging`. This approach provides a standard, extensible logging API that supports various logging providers and is seamlessly integrated into .NET Core and .NET 5/6 applications.
 
-## Microsoft's Built-in Logging
+## Utilizing `Microsoft.Extensions.Logging`
 
-C# also provides its own built-in logging capabilities using the `Microsoft.Extensions.Logging` namespace. This is a good option for simpler applications, or if you want to minimize external dependencies.
+`Microsoft.Extensions.Logging` abstracts logging into an extensible system, which can route logs to multiple destinations. It is designed to be lightweight and supports structured logging, log filtering by level, and more.
 
-## How to Include Logging
+## Step-by-Step Implementation
 
-Let's illustrate how to add logging with a popular framework like NLog:
+### Step 1: Project Setup
 
-**1. Installation:**
-Install the NLog NuGet package in your project:
+1. **Create Your Project**: Start by setting up a C# project suitable for your application's needs, such as a console, web, or worker service project.
 
-```PowerShell
-Install-Package NLog -Version <latest_version>
-```
+2. **Add Required Packages**: Ensure your project references `Microsoft.Extensions.Logging`. For projects targeting .NET Core 3.1 or later, this package is usually included by default.
 
-**2. Configuration:**
-Create an NLog configuration file (typically named `NLog.config`) in your project's root directory:
+### Step 2: Configure Logging
 
-```XML
-<?xml version="1.0" encoding="utf-8" ?>
-<nlog xmlns="http://www.nlog-project.org/schemas/NLog.xsd"
-      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+In a .NET Core or .NET 5/6 application, logging is typically configured in the `Program.cs` or `Startup.cs` file, depending on the application type. Here's an example for a console application:
 
-    <targets>
-        <target name="file" xsi:type="File" fileName="${basedir}/logs/applog.txt" />
-    </targets>
+```csharp
+using Microsoft.Extensions.Logging;
 
-    <rules>
-        <logger name="*" minlevel="Debug" writeTo="file" />
-    </rules>
-</nlog>
-```
-
-This configuration defines a file target to write logs to `applog.txt` and instructs NLog to capture logs with the 'Debug' level and higher.
-
-**3. Usage:**
-In your C# code, obtain an ILogger instance and use it to log messages:
-
-```C#
-using NLog;
-
-class MyClass
+class Program
 {
-    private static readonly ILogger logger = LogManager.GetCurrentClassLogger();
-
-    public void DoSomething()
+    static void Main(string[] args)
     {
-        logger.Debug("Starting the process...");
-        try 
+        using var loggerFactory = LoggerFactory.Create(builder =>
         {
-            // Code that might have errors
-            logger.Info("Process completed successfully"); 
-        }
-        catch (Exception ex)
-        {
-            logger.Error(ex, "An error occurred");
-        }
+            builder
+                .AddConsole()
+                .AddDebug()
+                .SetMinimumLevel(LogLevel.Information);
+        });
+
+        ILogger logger = loggerFactory.CreateLogger<Program>();
+        logger.LogInformation("Application Starting");
+
+        // Place your Dynamics 365 CE integration logic here
+
+        logger.LogInformation("Application Ending");
     }
 }
 ```
 
-## Best Practices
+In this configuration:
 
-- **Log Levels**: Utilize log levels (Trace, Debug, Information, Warning, Error, Critical) to categorize messages appropriately. This aids in filtering and analysis.
-- **Contextual Information**: Include relevant details like timestamps, user IDs, method names, and exception data to make logs more informative for debugging.
-- **Structured Logging**: Consider a framework like Serilog for structured logging. This allows you to query your logs as if they were a database.
-- **Log Rotation**: Employ log rotation strategies to prevent log files from becoming excessively large.
-- **Centralized Logging**: For larger systems, explore centralized log aggregation tools like Elasticsearch/Kibana to manage logs from multiple sources.
+- **LoggerFactory**: Creates an instance of `ILoggerFactory` that is used to configure and instantiate loggers.
+- **AddConsole** and **AddDebug**: Adds console and debug log providers. You can add other providers as needed.
+- **SetMinimumLevel**: Defines the global minimum log level. Logs below this level are not logged.
 
-## Here's how we can approach this using NLog for our logging framework in a sample custom app that connects to D365 CE.
+### Step 3: Logging in Your Application
 
-**1. Set up the Project**
+With `ILogger` configured, you can inject it into your classes (in ASP.NET Core applications via Dependency Injection) or create instances directly using the factory, as shown in the example. Use it to log messages of different severities throughout your application:
 
-Create a new C# console or Windows application.
-Install the following NuGet packages:
-* `NLog`
-* `Microsoft.CrmSdk.CoreAssemblies` (for Dynamics 365 CE interactions)
-**2. NLog Configuration** (`NLog.config`)
-
-```XML
-<?xml version="1.0" encoding="utf-8" ?>
-<nlog xmlns="http://www.nlog-project.org/schemas/NLog.xsd"
-      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-
-    <targets>
-        <target name="file" xsi:type="File" fileName="${basedir}/logs/d365app.log" />
-    </targets>
-
-    <rules>
-        <logger name="*" minlevel="Trace" writeTo="file" />
-    </rules>
-</nlog>
+```csharp
+logger.LogTrace("Detailed trace message");
+logger.LogDebug("Debugging information");
+logger.LogInformation("General information message");
+logger.LogWarning("A warning message");
+logger.LogError("An error message");
+logger.LogCritical("A critical error message");
 ```
 
-**3. C# Code**
+### Best Practices
 
-```C#
-using NLog;
-using Microsoft.Xrm.Sdk;
-using Microsoft.Xrm.Sdk.Query;
+- **Use Log Levels Appropriately**: Utilize different log levels to categorize the importance and type of logged information.
+- **Structured Logging**: Take advantage of structured logging to enrich log messages with additional context.
+- **Centralized Logging**: For larger applications, consider using a centralized logging platform to aggregate logs from multiple sources.
+- **Sensitive Information**: Be cautious not to log sensitive information such as passwords or personal data.
 
-namespace D365CE_WhoAmI
-{
-    class Program
-    {
-        private static readonly ILogger logger = LogManager.GetCurrentClassLogger();
+## Conclusion
 
-        static void Main(string[] args)
-        {
-            try
-            {
-                string connectionString = "Your D365 CE Connection String";
-                IOrganizationService service = ConnectToCrm(connectionString);
-
-                if (service != null)
-                {
-                    Guid userId = ((WhoAmIResponse)service.Execute(new WhoAmIRequest())).UserId;
-                    logger.Info($"WhoAmI call successful. User ID: {userId}");
-                } 
-                else
-                {
-                    logger.Error("Failed to connect to Dynamics 365 CE");
-                }
-            }
-            catch (Exception ex)
-            {
-                logger.Error(ex, "An error occurred during the WhoAmI process");
-            }
-        }
-
-        private static IOrganizationService ConnectToCrm(string connectionString)
-        {
-            logger.Debug("Connecting to Dynamics 365 CE...");
-            // Implement your Dynamics 365 CE connection logic using connectionString
-            // ...
-        }
-    }
-}
-```
-
-**Explanation**
-
-- **NLog Configuration:** The provided `NLog.config` logs all levels (Trace and above) to the file `d365app.log`.
-- **Logging in Code:**
-- We get an `ILogger` instance for our class.
-- Logging is used within the `ConnectToCrm` function to log connection attempts.
-- Success or failure of the WhoAmI call is logged.
-- Exceptions are caught and logged with detailed error messages.
-**Important:**
-
-Replace `"Your D365 CE Connection String"` with your actual Dynamics 365 CE connection string.
-Ensure the NLog.config file is copied to the output directory of your application.
-**Benefits of Logging**
-
-With this logging setup, you will have a log file that records:
-
-- Attempts to connect to Dynamics 365 CE.
-- The outcome of the WhoAmI request.
-- Any specific errors that might occur during the process.
+By integrating `ILogger` into your Dynamics 365 CE custom applications, you gain a flexible and powerful logging mechanism that enhances the maintainability and debuggability of your applications. This approach leverages the built-in features of the .NET platform, allowing for a standardized logging practice across your projects.
