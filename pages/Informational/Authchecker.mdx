@@ -1,0 +1,72 @@
+# Authenticating and Checking Permissions with Dynamics 365 Using a Registered Azure App
+
+Integrating with Dynamics 365 Customer Engagement (CE) often requires authenticating and ensuring your application has the necessary permissions to perform operations. This guide will walk you through using a C# console application to authenticate using either Basic or OAuth 2.0 authentication methods and check for specific permissions within Dynamics 365 CE.
+
+## Prerequisites
+- **Dynamics 365 CE Instance:** You need access to a Dynamics 365 instance and the URL of the instance.
+- **Azure App Registration:** For OAuth 2.0 authentication, you need an app registered in Azure Active Directory (AAD) with the necessary API permissions for Dynamics 365.
+- **.NET Development Environment:** The code is written in C#, targeting .NET Core or .NET Framework. Ensure you have the .NET SDK installed and an IDE or editor (like Visual Studio, VS Code).
+
+### Step 1: Setting Up Your Environment
+
+Clone/Download the Code: Start by cloning the provided code repository or downloading the code to your local machine.
+
+Install Dependencies: The code uses the Microsoft.Identity.Client package for handling OAuth 2.0 authentication. Install this package using NuGet package manager.
+
+```PowerShell
+Install-Package Microsoft.Identity.Client
+```
+Configuration: Update the config.json file with your Dynamics 365 instance URL, Azure App registration details (client ID, tenant ID, and client secret), and the authentication type you want to use (1 for Basic, 2 for OAuth 2.0).
+
+```json
+{
+  "Dynamics365InstanceUrl": "https://yourorg.crm.dynamics.com",
+  "AuthType": 2,
+  "Username": "your_username",
+  "Password": "your_password",
+  "ClientId": "your_client_id",
+  "ClientSecret": "your_client_secret",
+  "TenantId": "your_tenant_id"
+}
+```
+
+### Step 2: Understanding the Code Structure
+
+The code consists of several key components:
+
+**AuthenticationChecker Class:** This class is responsible for authenticating with Dynamics 365 using either Basic or OAuth 2.0 authentication methods and checking permissions by making a sample API call.
+
+**CheckPermissions Method:** This method attempts to query Dynamics 365 for contact records to verify that the authenticated user or application has read permissions.
+
+**Configuration Class:** This class represents the structure of the config.json file, facilitating easy access to configuration values.
+
+### Step 3: Running the Application
+
+Open your terminal or command prompt and navigate to the directory containing your project files.
+
+Build your project to ensure all dependencies are properly resolved.
+
+```Copy code
+dotnet build
+```
+Run the application. The application will read the configuration, authenticate using the specified method, and attempt to check permissions within Dynamics 365.
+
+```Copy code
+dotnet run
+```
+Step 4: Interpreting the Results
+If the authentication and permission check are successful, you'll see a message indicating success.
+
+If there's an issue with authentication or permissions, detailed error messages will help you diagnose the problem, such as incorrect client credentials, insufficient permissions, or connectivity issues.
+
+## Troubleshooting and Best Practices
+
+**Ensure Correct API Permissions:** For OAuth 2.0 authentication, verify that your Azure App registration has the required API permissions for Dynamics 365 and that consent has been granted.
+
+**Securely Manage Credentials:** Avoid storing sensitive information like passwords and client secrets in plaintext. Consider using secure storage solutions like Azure Key Vault.
+
+**Use Appropriate Error Handling:** The provided code includes basic error handling. Expand this as needed to gracefully handle exceptions and provide clear feedback.
+
+**Check Network Connectivity:** Ensure that your environment has network access to your Dynamics 365 instance.
+
+**Feedback:** For any scenario where the app does not help or provide more details, please share your feedback immediately to the app creator to include the feedback or file one to this page

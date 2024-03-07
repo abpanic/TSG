@@ -149,3 +149,49 @@ Remember: You'll likely need to restart your D365 services for the logging chang
 
 * **Performance:** Enabling tracing can impact performance. Disable it when not needed.
 * **Data Sensitivity:** Logs may contain sensitive information. Exercise caution with their storage and usage.  
+
+A simple powershell script to capture traces :
+
+How To Enable CRM Tracing:
+
+```Powershell
+
+#https://support.microsoft.com/en-au/help/907490/how-to-enable-tracing-in-microsoft-dynamics-crm
+#feedback to: github.com/abpanic
+ 
+Add-PSSnapin Microsoft.Crm.PowerShell
+ 
+$setting = Get-CrmSetting TraceSettings
+$setting.Enabled = $True
+$setting.Directory = "D:\crmtrace\logs\"
+ 
+Set-CrmSetting $setting
+Get-CrmSetting TraceSettings
+ 
+Write-Output "The Crm Tracing is now ENABLED and the tracing logs will be available on this directory $($setting.Directory)"
+pause
+```
+
+How To Disable CRM Tracing:
+
+```PowerShell
+#https://support.microsoft.com/en-au/help/907490/how-to-enable-tracing-in-microsoft-dynamics-crm
+#feedback to: github.com/abpanic
+
+Add-PSSnapin Microsoft.Crm.PowerShell
+ 
+$setting = Get-CrmSetting TraceSettings
+$setting.Enabled = $False
+ 
+Set-CrmSetting $setting
+Get-CrmSetting TraceSettings
+ 
+Write-OutPut "The Crm Tracing is now DISABLED"
+pause
+```
+
+Restart CRM Services:
+
+```Powershell
+get-service *mscrm* | restart-service
+```
