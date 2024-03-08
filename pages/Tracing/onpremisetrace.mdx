@@ -1,3 +1,9 @@
+---
+title: D365 CE/CRM On_Premise logging
+description: Logging in D365 CE/CRM on-premise.
+ms.date: 05/01/2023
+ms.topic: how-to
+---
 ## Dynamics CRM Traces for On-Premise instances
 
 Dynamics CRM traces are powerful debugging tools that provide detailed logs of system activities and events. 
@@ -39,7 +45,7 @@ Know about the registry components here ![registry components](./media/onpremise
     * Set the "Exception Trace Level".
 * **Step 4:** Click "Apply" and "OK".
 
-### **Method 3: PowerShell Scripts**
+### Method 3: PowerShell Scripts
 
 **Choosing the Right Method**:
 
@@ -85,11 +91,11 @@ Write-OutPut "CRM Tracing DISABLED."
 get-service *mscrm* | restart-service
 ```
 
-### **Accessing Trace Logs**
+### Accessing Trace Logs
 
 Logs will be available at the specified location. Review them with a text editor or log analysis tool.
 
-### **Key Considerations**
+### Key Considerations
 
 - **Performance Impact**: Use tracing judiciously as it can affect system performance.
 - **Data Sensitivity**: Handle logs carefully as they might contain sensitive data.
@@ -155,18 +161,20 @@ $xmlDoc.Save($webConfigPath)
 
 Write-Host "D365 logging configuration updated. Log files will be written to: $TraceFilePath"
 ```
-Explanation:
+### Explanation:
 
-Parameters:
+### Parameters:
 
-TraceFilePath: Allows you to specify the desired location for the log files. Defaults to "C:\D365Logs".
-LogLevel: Controls the verbosity of logging. Valid options are:
-"Verbose"
-"Information"
-"Warning"
-"Error"
-"Critical"
-Directory Creation: Checks if the specified trace directory exists, creates it if necessary.
+**TraceFilePath:** Allows you to specify the desired location for the log files. Defaults to "C:\D365Logs".
+
+**LogLevel:** Controls the verbosity of logging. Valid options are:
+- "Verbose"
+- "Information"
+- "Warning"
+- "Error"
+- "Critical"
+
+**Directory Creation:** Checks if the specified trace directory exists, creates it if necessary.
 
 XML Configuration: Constructs the XML snippet needed to configure D365's logging. This includes settings for:
 
